@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: vault-csi
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: vault-csi-role
+rules:
+- apiGroups: [""]
+  resources: ["serviceaccounts/token"]
+  verbs: ["create"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: vault-csi-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: vault-csi-role
+subjects:
+- kind: ServiceAccount
+  name: vault-csi
+  namespace: default
+---
+apiVersion: v1
+kind: SecretProviderClass
+metadata:
+  name: app-secrets
+spec:
+  provider: vault
+  parameters:
+    vaultAddress: "http://vault.management.local:8200"
+    roleName: "app-role"
+    objects: |
+      - objectName: "database-password"
+        secretPath: "secret/data/app"
+        secretKey: "db_password"
+      - objectName: "api-key"
+        secretPath: "secret/data/app"
+        secretKey: "api_key"

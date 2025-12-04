@@ -1,0 +1,10 @@
+.deploy-production:
+  stage: deploy-production
+  script:
+    - git clone https://gitlab.local/gitops/helm-charts.git
+    - cd helm-charts/$CI_PROJECT_NAME
+    - sed -i "s/tag:.*/tag: $CI_COMMIT_SHA/" values.yaml
+    - git add values.yaml && git commit -m "Update to $CI_COMMIT_SHA" && git push
+  when: manual
+  environment:
+    name: production

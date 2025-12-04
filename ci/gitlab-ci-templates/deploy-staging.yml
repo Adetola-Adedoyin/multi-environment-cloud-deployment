@@ -1,0 +1,6 @@
+.deploy-staging:
+  stage: deploy-staging
+  script:
+    - ssh staging-server "cd /opt/staging && docker-compose pull && docker-compose up -d"
+  environment:
+    name: staging

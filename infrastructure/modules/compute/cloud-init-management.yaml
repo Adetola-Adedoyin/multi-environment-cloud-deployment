@@ -1,0 +1,17 @@
+#cloud-config
+hostname: ${hostname}
+package_update: true
+packages:
+  - docker.io
+  - docker-compose
+  - curl
+  - wget
+  - unzip
+
+runcmd:
+  - systemctl enable docker
+  - systemctl start docker
+  - usermod -aG docker ubuntu
+  - curl -fsSL https://get.docker.com | sh
+  - mkdir -p /opt/rancher /opt/gitlab /opt/harbor /opt/vault
+  - echo "Management node ${hostname} initialized" > /var/log/cloud-init-output.log

@@ -1,0 +1,15 @@
+#cloud-config
+hostname: ${hostname}
+package_update: true
+packages:
+  - docker.io
+  - docker-compose
+  - curl
+  - wget
+
+runcmd:
+  - systemctl enable docker
+  - systemctl start docker
+  - usermod -aG docker ubuntu
+  - mkdir -p /opt/staging
+  - echo "Staging node ${hostname} initialized" > /var/log/cloud-init-output.log

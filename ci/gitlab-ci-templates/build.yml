@@ -1,0 +1,5 @@
+.build:
+  stage: build
+  script:
+    - docker build -t $HARBOR_REGISTRY/$CI_PROJECT_NAME:$CI_COMMIT_SHA .
+    - docker push $HARBOR_REGISTRY/$CI_PROJECT_NAME:$CI_COMMIT_SHA
